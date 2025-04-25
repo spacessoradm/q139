@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from "../../../config/supabaseClient";
 import Sidebar from '../../../components/UserSidebar/index';
-import UserHeader from '../../../components/UserHeader/index.jsx';
+import UserHeader from '../../../components/UserHeader/index';
 
 import './FRCRDashboard.css';
 
