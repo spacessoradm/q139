@@ -5,7 +5,7 @@ import "./index.css";
 import { ChevronDown, Check, ArrowUp } from "lucide-react"
 
 import UserHeader from '../../../components/UserHeader/index';
-import UserSidebar from '../../../components/UserSideBar/index.jsx';
+import UserSidebar from '../../../components/UserSidebar/index';
 
 const Module2A = () => {
     const userId = localStorage.getItem("profileId");
