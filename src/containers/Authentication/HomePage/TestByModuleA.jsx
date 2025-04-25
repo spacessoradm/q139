@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import supabase from "../../../config/supabaseClient";
 import UserHeader from '../../../components/UserHeader/index';
-import UserSidebar from '../../../components/UserSideBar/index';
+import UserSidebar from '../../../components/UserSideBar/index.jsx';
 import ModuleCard from '../../../components/ModuleCard';
 
 import './FRCRDashboard.css';
