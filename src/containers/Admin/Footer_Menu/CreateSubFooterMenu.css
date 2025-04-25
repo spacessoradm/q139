@@ -1,0 +1,51 @@
+label {
+    font-size: 16px !important;
+    color: #000000;
+}
+
+.enhanced-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    color: #000000;
+    background-color: #ffffff !important;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .enhanced-input:focus {
+    background-color: #fff;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    outline: none;
+  }
+  
+  .enhanced-input::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
+  
+  .enhanced-input:hover {
+    border-color: #888;
+  }
+
+  .create-btn {
+    width: 100% !important;
+  }
+  
+  .outsider {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .insider {
+    width: 50%;
+  }
+
+  .field-container {
+    border: 1px solid #ccc;
+    padding: 12px;
+    margin: 16px;
+  }

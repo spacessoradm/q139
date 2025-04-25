@@ -1,0 +1,170 @@
+/* Main Navigation Container */
+.side-nav-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 270px;
+  background-color: #1e293b;
+  color: white;
+  transition: width 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box; /* Ensures padding is included in width/height */
+  overflow-y: auto; /* Make the container scrollable */
+}
+
+.side-nav-container.collapsed {
+  width: 70px;
+}
+
+/* Toggle Button */
+.toggle-btn {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: white;
+  background-color: #111827;
+  border-bottom: 1px solid #374151;
+  box-sizing: border-box; /* Consistent box-sizing */
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+/* Navigation Items */
+.side-nav-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.side-nav-item {
+  display: flex;
+  flex-direction: column; /* Allow dropdown to appear below */
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box; /* Ensures proper width with padding */
+}
+
+.side-nav-item a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 15px 20px; /* Uniform padding */
+  text-decoration: none;
+  color: #fff;
+  background-color: transparent;
+  width: 100%; /* Ensure full width */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.side-nav-item a.active {
+  background-color: #2563eb;
+}
+
+.side-nav-item a:hover {
+  background-color: #374151;
+}
+
+/* Icon Styling */
+.nav-icon {
+  font-size: 1.25rem; /* Adjust icon size */
+  flex-shrink: 0; /* Prevent icon from shrinking */
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-title {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem; /* Adjust text size */
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for overflow */
+}
+
+/* Collapsed Sidebar */
+.side-nav-container.collapsed .nav-title {
+  display: none;
+}
+
+.side-nav-container.collapsed .nav-icon {
+  margin-right: 0;
+}
+
+/* Dropdown Header */
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px 10px 0;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-header:hover {
+  background-color: #374151;
+}
+
+/* Dropdown Arrow */
+.dropdown-header .dropdown-arrow {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-header.expanded .dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+/* Nested Menu (Dropdown Content) */
+.nested-menu {
+  list-style: none;
+  margin: 0;
+  padding-left: 20px; /* Indentation for nested items */
+  background-color: #1e293b;
+  display: none; /* Hidden by default */
+}
+
+.nested-menu.expanded {
+  display: block; /* Show when expanded */
+}
+
+.nested-item {
+  padding: 10px 20px;
+}
+
+.nested-item a {
+  font-family: 'Courier New', Courier, monospace;
+  text-decoration: none;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.nested-item a.active {
+  color: #ffffff; /* Active link color */
+}
+
+.nested-item a:hover {
+  color: #ffffff;
+}

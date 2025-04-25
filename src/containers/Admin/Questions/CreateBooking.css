@@ -1,0 +1,189 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  .close-modal-btn,
+  .submit-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .close-modal-btn {
+    background: #ff4d4d;
+  }
+  
+  .submit-btn:hover,
+  .close-modal-btn:hover {
+    opacity: 0.9;
+  }
+
+  .ql-container {
+    height: 350px !important;
+  }
+  
+  .ql-editor {
+    min-height: 350px;
+    font-size: 16px;
+  }
+
+  .addbtn {
+    background-color: green;
+    margin-top: 24px;
+  }
+  .removebtn {
+    background-color: red;
+    width: 40px;
+  }
+  
+
+  /* Form Container */
+.outsider {
+  max-width: 500px;
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: auto;
+}
+
+/* Input & Select Fields */
+.insider label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #004c4c;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.insider input,
+.insider select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.insider input:focus,
+.insider select:focus {
+  border-color: #004c4c;
+}
+
+/* Options Field */
+.field-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Add & Remove Buttons */
+.addbtn, .removebtn {
+  background: #004c4c;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.removebtn {
+  background: #b30000;
+}
+
+.addbtn:hover {
+  background: #007474;
+}
+
+.removebtn:hover {
+  background: #d10000;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  background: #004c4c;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background 0.3s;
+}
+
+.submit-btn:hover {
+  background: #007474;
+}
+
+/* Disabled Submit */
+.submit-btn:disabled {
+  background: grey;
+  cursor: not-allowed;
+}
+
+
+/* Edit Question */
+
+.edit-question-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+.form-scrollable {
+  flex-grow: 1;
+  overflow-y: auto; /* Enables scrolling */
+  padding: 20px;
+  max-height: calc(100vh - 80px); /* Adjust height */
+  width: 90%; /* Set width to 70% */
+  margin: 0 auto; /* Center it horizontally */
+}
+
+/* for text-field writing space height */
+.jodit-wysiwyg {
+  height: 250px !important;
+}
+
+/* 2A options - edit 2A questions */
+.option-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.option-label {
+  font-weight: bold;
+  font-size: 16px;
+}

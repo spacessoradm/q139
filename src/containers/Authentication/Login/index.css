@@ -1,0 +1,198 @@
+/* General styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins';
+}
+
+/* Login Page Container */
+.login-page {
+  display: flex;
+  height: 100vh;
+}
+
+.login-container {
+  display: flex;
+  width: 100%;
+}
+
+/* Form Section */
+.login-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 4rem;
+  background-color: #ffffff;
+}
+
+.login-form h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.login-form h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.form-body{
+  width: 60%;
+}
+
+/* Input Group */
+.input-group {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  outline: none;
+  background-color: #fff !important;
+  color: #000;
+  transition: border 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #007bff;
+}
+
+.input-group .icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #666;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #004c4c;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* Footer */
+.footers {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.footers span {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.footers span:hover {
+  text-decoration: underline;
+}
+
+/* Logo */
+.logo {
+  width: 150px; /* Adjust the size */
+  margin-bottom: 20px; /* Add spacing */
+}
+
+
+/* Banner Section */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.login-banner {
+  width: 55%; 
+  height: 100vh;
+  background-image: url('https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general//login_Ads.png'); /* Add your image */
+  background-size: cover;
+  background-position: center;
+  animation: float 3s ease-in-out infinite; /* Apply the floating animation */
+}
+
+.login-banner-old {
+  flex: 1;
+  background: url('https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general//login_Ads.png') no-repeat center center;
+  background-size: cover;
+}
+
+/* Blur effect when loading */
+.blur {
+  filter: blur(5px);
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* Loading overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8); /* White transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Lower than toast */
+}
+
+/* Spinner styles */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ccc;
+  border-top: 4px solid #007bff; /* Blue color for the spinner */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
+}

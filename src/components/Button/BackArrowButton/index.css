@@ -1,0 +1,27 @@
+.back-button {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px 0 15px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: none;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  .back-button .icon {
+    margin-right: 8px;
+    font-size: 24px;
+  }
+  
+  .back-button.hover {
+    background-color: #d65a5a !important;
+    color: #ffffff;
+  }
+  
+  .back-button:focus {
+    outline: none;
+  }
+  

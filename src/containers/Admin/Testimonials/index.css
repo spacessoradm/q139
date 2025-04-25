@@ -1,0 +1,224 @@
+/* Redeem Items */
+
+.whole-page{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.title-page{
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.sub-title{
+    font-size: 20px;
+}
+
+/* index.jsx */
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes shake {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    75% {
+      transform: translateX(-5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .loading-message {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    background: linear-gradient(90deg, #4CAF50, #2196F3, #FF5722);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: fadeIn 2s ease-in-out infinite;
+  }
+  
+  .error-message {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .card-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    font-family: 'Poppins';
+  }
+  
+  .testimonial-card {
+    background: white;
+    padding: 15px;
+    border-radius: 25px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .testimonial-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .card-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  .view-button, .edit-button, .delete-button {
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0 5px;
+  }
+
+  .view-button {
+    font-size: 25px;
+    color: #cfd730;
+    cursor: pointer;
+  }
+
+  .edit-button {
+    font-size: 25px;
+    color: #140ace;
+    cursor: pointer;
+  }
+
+  .delete-button {
+    font-size: 25px;
+    color: #d40815;
+    cursor: pointer;
+  }
+
+  .prev-button {
+    margin-right: 10px;
+    color: #2196F3;
+    font-size: 25px;
+  }
+
+  .next-button {
+    margin-left: 10px;
+    color: #2196F3;
+    font-size: 25px;
+  }
+
+  /* create and edit page */
+  label {
+    font-size: 16px !important;
+    color: #000000;
+}
+
+.enhanced-input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    color: #000000;
+    background-color: #ffffff !important;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .enhanced-input:focus {
+    background-color: #fff;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+    outline: none;
+  }
+  
+  .enhanced-input::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
+  
+  .enhanced-input:hover {
+    border-color: #888;
+  }
+
+  .create-btn {
+    width: 100% !important;
+  }
+  
+  .outsider {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .insider {
+    width: 50%;
+  }
+
+  .field-container {
+    border: 1px solid #ccc;
+    padding: 12px;
+    margin: 16px;
+  }
+
+
+/* Ensure the modal content is scrollable */
+.modal-content {
+  background: white;
+  padding: 20px;
+  width: 500px;
+  max-height: 80vh; /* Limit height to 80% of the viewport */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Prevent the modal overlay from restricting scrolling */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure Quill Editor adapts */
+.quill-editor {
+  max-height: 200px; /* Adjust as needed */
+  overflow-y: auto;
+}
+
+/* Adjust preview image size */
+.image-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-top: 10px;
+}
+
+/* Keep buttons at the bottom */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}

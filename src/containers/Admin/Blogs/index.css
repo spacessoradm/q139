@@ -1,0 +1,291 @@
+/* Redeem Items */
+
+.whole-page{
+    font-family: 'Poppins', sans-serif;
+}
+
+.title-page{
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.sub-title{
+    font-size: 20px;
+}
+
+/* index.jsx */
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes shake {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    75% {
+      transform: translateX(-5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .loading-message {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    background: linear-gradient(90deg, #4CAF50, #2196F3, #FF5722);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: fadeIn 2s ease-in-out infinite;
+  }
+  
+  .error-message {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .table-container {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Poppins';
+    border-radius: 35px;
+  }
+
+  .header-row {
+    background-color: #dc7d7d;
+    color: white;
+  }
+
+  .sort-header {
+    padding: 10px; 
+    cursor: pointer;
+  }
+
+  .normal-header {
+    padding: 10px; 
+    text-align: center;
+  }
+
+  .normal-column {
+    padding: 10px; 
+    text-align: center;
+  }
+
+  .action-column {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    gap: 20px;
+  }
+
+  .view-button {
+    font-size: 25px;
+    color: #cfd730;
+    cursor: pointer;
+  }
+
+  .edit-button {
+    font-size: 25px;
+    color: #140ace;
+    cursor: pointer;
+  }
+
+  .delete-button {
+    font-size: 25px;
+    color: #d40815;
+    cursor: pointer;
+  }
+
+  .prev-button {
+    margin-right: 10px;
+    color: #2196F3;
+    font-size: 25px;
+  }
+
+  .next-button {
+    margin-left: 10px;
+    color: #2196F3;
+    font-size: 25px;
+  }
+
+  
+/* create and edit page */
+label {
+  font-size: 16px !important;
+  color: #000000;
+}
+
+.enhanced-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  color: #000000;
+  background-color: #ffffff !important;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.enhanced-input:focus {
+  background-color: #fff;
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+  outline: none;
+}
+
+.enhanced-input::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+.enhanced-input:hover {
+  border-color: #888;
+}
+
+.create-btn {
+  width: 100% !important;
+}
+
+.outsider {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.insider {
+  width: 50%;
+}
+
+.field-container {
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin: 16px;
+}
+
+.ql-container {
+  height: 200px !important;
+}
+
+.ql-editor {
+  min-height: 150px;
+  font-size: 16px;
+}
+
+.blog-grid {
+  padding: 20px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  font-family: Poppins;
+}
+
+.blog-card {
+  background: #fff;
+  color: #fff;
+  border: 1px solid #004c4c;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+}
+
+.blog-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-bottom: 1px solid #fff;
+}
+
+.blog-title {
+  color: #004c4c;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.blog-content {
+  color: #004c4c;
+  font-size: 0.5rem;
+  padding: 10px;
+}
+
+.blog-tag {
+  font-size: 0.9rem;
+  color: #bbb;
+}
+
+.blog-date {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.blog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.action-icon {
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.view-icon { color: #4caf50; }
+.edit-icon { color: #ff9800; }
+.delete-icon { color: #f44336; }
+
+
+/* Popup */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999; /* Ensure it's behind the popup but above everything else */
+}
+
+.modal-container {
+  background: white;
+  padding: 20px;
+  width: 800px; /* Adjust as needed */
+  max-width: 90%;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000; /* Ensure it appears on top */
+}
+
+

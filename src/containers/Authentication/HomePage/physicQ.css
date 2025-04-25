@@ -1,0 +1,47 @@
+.option {
+    display: block;
+    margin: 5px 0;
+    padding: 8px;
+    border: 2px solid transparent; /* Default */
+    cursor: pointer;
+}
+
+.correct {
+    background-color: lightgreen;
+    border: 2px solid green;
+}
+
+.wrong {
+    background-color: lightcoral;
+    border: 2px solid red;
+}
+
+.explanation {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+
+.explanation {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.correct-text {
+    color: green;
+    font-weight: bold;
+}
+
+.wrong-text {
+    color: red;
+    font-weight: bold;
+}
+
+.main-explanation {
+    background: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    font-weight: bold;
+}

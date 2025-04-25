@@ -1,0 +1,130 @@
+/* Redeem Items */
+
+.whole-page{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.title-page{
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.sub-title{
+    font-size: 20px;
+}
+
+/* index.jsx */
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes shake {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    75% {
+      transform: translateX(-5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .loading-message {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    background: linear-gradient(90deg, #4CAF50, #2196F3, #FF5722);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    animation: fadeIn 2s ease-in-out infinite;
+  }
+  
+  .error-message {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .table-container {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Courier New';
+    border-radius: 35px;
+  }
+
+  .header-row {
+    background-color: #dc7d7d;
+    color: white;
+  }
+
+  .sort-header {
+    padding: 10px; 
+    cursor: pointer;
+  }
+
+  .normal-header {
+    padding: 10px; 
+    text-align: center;
+  }
+
+  .normal-column {
+    padding: 10px; 
+    text-align: center;
+  }
+
+  .action-column {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    gap: 20px;
+  }
+
+  .view-button {
+    font-size: 25px;
+    color: #cfd730;
+    cursor: pointer;
+  }
+
+  .edit-button {
+    font-size: 25px;
+    color: #140ace;
+    cursor: pointer;
+  }
+
+  .delete-button {
+    font-size: 25px;
+    color: #d40815;
+    cursor: pointer;
+  }
+
+  .prev-button {
+    margin-right: 10px;
+    color: #2196F3;
+    font-size: 25px;
+  }
+
+  .next-button {
+    margin-left: 10px;
+    color: #2196F3;
+    font-size: 25px;
+  }
+
+  
+

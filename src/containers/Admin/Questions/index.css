@@ -1,0 +1,396 @@
+/* */
+
+.whole-page {
+  font-family: 'Poppins', sans-serif;
+}
+
+.title-page{
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.sub-title{
+  font-size: 20px;
+}
+
+/* index.jsx */
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.loading-message {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  background: linear-gradient(90deg, #4CAF50, #2196F3, #FF5722);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: fadeIn 2s ease-in-out infinite;
+}
+
+.error-message {
+  font-weight: bold;
+  text-align: center;
+}
+
+.table-container-popup {
+  width: 100%;
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Calibri', sans-serif;
+  border-radius: 35px;
+}
+
+.header-row {
+  background-color: #004c4c !important;
+  color: white;
+  height: 35px;
+}
+
+.sort-header {
+  padding: 10px; 
+  cursor: pointer;
+}
+
+.normal-header {
+  padding: 10px; 
+  text-align: center;
+}
+
+.question-column {
+  padding: 10px; 
+  text-align: left;
+}
+
+.hidden-column {
+  display: none;
+}
+
+.normal-column {
+  padding: 10px; 
+  text-align: center;
+}
+
+.action-column {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  gap: 20px;
+}
+
+.prev-button {
+  margin-right: 10px;
+  color: #2196F3;
+  font-size: 25px;
+}
+
+.next-button {
+  margin-left: 10px;
+  color: #2196F3;
+  font-size: 25px;
+}
+
+/* Create and Edit Page*/
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.close-modal-btn,
+.submit-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.close-modal-btn {
+  background: #ff4d4d;
+}
+
+.submit-btn:hover,
+.close-modal-btn:hover {
+  opacity: 0.9;
+}
+
+.ql-container {
+  height: 350px !important;
+}
+
+.ql-editor {
+  min-height: 350px;
+  font-size: 16px;
+}
+
+/*     */
+.container {
+  display: flex; /* Makes sidebar and content side by side */
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #f8f9fa;
+  padding: 20px;
+  border-right: 1px solid #7e6a6a;
+}
+
+.sidebar h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar li:hover {
+  background: #e9ecef;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Ensures proper spacing */
+}
+
+.document-icon {
+  cursor: pointer;
+  margin-left: 10px; /* Adds space between the text and the icon */
+  font-size: 1.1em; /* Adjusts icon size */
+  color: #2196F3;
+}
+
+.venue-category {
+  flex: 1; /* Ensures main content takes remaining space */
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.subcategory-list li {
+  padding: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.subcategory-list li:hover {
+  background-color: #f8f9fa;
+}
+
+.subcategory-list li.active {
+  background-color: #004c4c; /* Light blue background */
+  font-weight: bold;
+  color: #ffffff;
+}
+
+
+/* Three-dot Menu */
+.action-menu {
+  position: relative;
+}
+
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+  color: #555;
+}
+
+/* Dropdown Menu */
+.menu-dropdown {
+  position: absolute;
+  right: 0;
+  background: white;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* Menu Item */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  font-size: 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  color: #333; /* Default text color */
+  transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Gradient Hover Effect */
+.menu-item:hover {
+  background: linear-gradient(to right, #004c4c, #008080);
+  color: white; /* Change text color to white */
+}
+
+/* Ensure icons inside menu items turn white */
+.menu-item:hover svg {
+  color: white !important;
+  fill: white !important;
+}
+
+/* Delete option has a red gradient */
+.menu-item.delete:hover {
+  background: linear-gradient(to right, #8b0000, #ff4444);
+  color: white;
+}
+
+.menu-item.view {
+  color: green;
+}
+
+.menu-item.edit {
+  color: blue;
+}
+
+.menu-item.delete {
+  color: red;
+}
+
+
+.side-by-side {
+  display: flex;
+  gap: 16px; /* Adds spacing between fields */
+}
+
+.side-by-side > * {
+  flex: 1; /* Equal width for both elements */
+  min-width: 150px; /* Prevents items from shrinking too much */
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.admin-footer {
+  position: fixed; /* Keeps footer at the bottom */
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+.question-tab {
+  max-height: calc(100vh - 150px); /* Adjust height based on header/footer */
+  overflow-y: auto;  /* Enables vertical scrolling */
+  padding: 12px;
+  width: 75%;
+  background-color: white; /* Optional for better contrast */
+}
+
+/* module running number popup */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s ease;
+}
+
+.popup-overlay.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup-container {
+  background: #fff;
+  width: 80%;
+  max-width: 800px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  cursor: pointer;
+  font-size: 24px;
+  color: red;
+}
+
+
+
