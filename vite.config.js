@@ -9,6 +9,9 @@ export default defineConfig({
     VitePWA({
       base: '',
       registerType: 'autoUpdate',
+      workbox: {
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MB
+      },
       manifest: {
         name: 'AceFRCR',
         short_name: 'AceFRCR',
@@ -37,7 +40,7 @@ export default defineConfig({
       },
     }),
   ],
-  base: '', // Ensure this matches your repository name
+  base: '',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -48,5 +51,8 @@ export default defineConfig({
   },
   css: {
     postcss: {},
+  },
+  build: {
+    chunkSizeWarningLimit: 3000, // 3MB
   },
 });
