@@ -24,6 +24,11 @@ const DashboardHeader = ({ profile }) => {
     }
   };
 
+  const handleSignOut = () => {
+    localStorage.removeItem("profileId"); // Clear token
+    window.location.href = "/"; // Redirect to homepage (optional)
+  };
+
   return (
     <header className="dashboard-header">
       <div className="header-left">
@@ -55,7 +60,7 @@ const DashboardHeader = ({ profile }) => {
         <span className="welcome-text">Welcome {profile?.username},</span>
         <button className="icon-button"><Bell size={18} /></button>
         <button className="icon-button"><User size={18} /></button>
-        <button className="icon-button"><LogOut size={18} /></button>
+        <button onClick={handleSignOut} className="icon-button"><LogOut size={18} /></button>
       </div>
     </header>
   );

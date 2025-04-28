@@ -11,6 +11,7 @@ const ModuleCard = ({ module }) => {
         attempted: 0,
         attTotal: 0
     });
+    const [category, setCategory] = useState('');
 
     useEffect(() => {
         const fetchProgress = async () => {
@@ -45,20 +46,33 @@ const ModuleCard = ({ module }) => {
                 .select('*', { count: 'exact', head: true })
                 .eq('sub_category', title);
 
+            const { data: parentCategory } = await supabase
+                .from('question_subcategory')
+                .select('parent')
+                .eq('subcategory_name', title);
+
             setProgress({
                 correct: correct || 0,
                 incorrect: incorrect || 0,
                 attempted: attempted || 0,
                 attTotal: attTotal || 0
             });
+
+            setCategory(parentCategory);
         };
 
         fetchProgress();
     }, [module.title, profileId]);
     
     const handleStartQuiz = () => {
-        // Navigate to the questions page with the category name as a parameter
-        navigate(`/test_module_2A_questions/${module.title}`);
+
+        if (category == '3'){
+            // Navigate to the questions page with the category name as a parameter
+            navigate(`/test_module_2A_questions/${module.title}`);
+        } else {
+            // Navigate to the questions page with the category name as a parameter
+            navigate(`/test_module_Physics_questions/${module.title}`);
+        }
     };
 
     // Module icon component
@@ -67,8 +81,8 @@ const ModuleCard = ({ module }) => {
         if (imageUrl && imageUrl.startsWith('https')) {
         return (
             <div className="module-icon" style={{ 
-            width: "130px", 
-            height: "80px", 
+            width: "200px", 
+            height: "150px", 
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -77,7 +91,7 @@ const ModuleCard = ({ module }) => {
             <img 
                 src={imageUrl}
                 alt="module icon" 
-                style={{ width: "130px", height: "80px" }}
+                style={{ width: "200px", height: "120px" }}
             />
             </div>
         );

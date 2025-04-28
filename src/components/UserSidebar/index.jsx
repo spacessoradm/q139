@@ -18,6 +18,10 @@ const UserSidebar = () => {
     }
   }, []);
 
+  const getHome = () => {
+    return '/';
+  };
+
   const getLink = () => {
     if (module === '2A') return '/user_dashboard_2A';
     if (module === 'Physics') return '/user_dashboard_Physics';
@@ -41,7 +45,7 @@ const UserSidebar = () => {
       </div>
       <div className="sidebar-icons">
         <div className="icon-block"><ChartNoAxesGantt /></div>
-        <div className="icon-block"><House /><span>Home</span></div>
+        <a href={getHome()} className="icon-block"><House /><span>Home</span></a>
         <a href={getLink()} className={`icon-block ${!module ? 'disabled-link' : ''}`}>
             <LayoutDashboard /><span>Dashboard</span>
         </a>
