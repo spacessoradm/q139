@@ -49,7 +49,8 @@ const ModuleCard = ({ module }) => {
             const { data: parentCategory } = await supabase
                 .from('question_subcategory')
                 .select('parent')
-                .eq('subcategory_name', title);
+                .eq('subcategory_name', title)
+                .single();
 
             setProgress({
                 correct: correct || 0,
@@ -58,13 +59,14 @@ const ModuleCard = ({ module }) => {
                 attTotal: attTotal || 0
             });
 
-            setCategory(parentCategory);
+            setCategory(parentCategory?.parent || '');
         };
 
         fetchProgress();
     }, [module.title, profileId]);
     
     const handleStartQuiz = () => {
+
 
         if (category == '3'){
             // Navigate to the questions page with the category name as a parameter
