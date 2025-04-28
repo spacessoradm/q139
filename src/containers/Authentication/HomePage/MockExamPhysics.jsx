@@ -4,7 +4,7 @@ import supabase from "../../../config/supabaseClient";
 import UserHeader from '../../../components/UserHeader';
 import UserSidebar from '../../../components/UserSideBar';
 
-const MockExam2A = () => {
+const MockExamPhysics = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem("profileId");
 
@@ -33,7 +33,7 @@ const MockExam2A = () => {
       const { data, error } = await supabase
         .from('question_subcategory')
         .select('*')
-        .eq('parent', 3);
+        .eq('parent', 4);
       if (!error) setModules(data);
     };
 
@@ -184,7 +184,7 @@ const MockExam2A = () => {
             { label: 'Styles*', name: 'style', options: ['Standard', 'Test by Module'] },
             { label: 'Modules', name: 'module', options: modules.map(mod => mod.subcategory_name) },
             { label: 'Familiarity', name: 'familiarity', options: ['All', 'Correct', 'Incorrect'] },
-            { label: 'Numbers of Questions', name: 'number', options: ['10 questions', '30 questions', '60 questions', '90 questions'] },
+            { label: 'Numbers of Questions', name: 'number', options: ['10 questions', '20 questions', '30 questions'] },
             { label: 'Timer', name: 'timer', options: ['On', 'Off'] }
           ].map((item, idx) => (
             <div key={idx} style={{ display: 'flex', margin: '15px 0' }}>
@@ -245,4 +245,4 @@ const MockExam2A = () => {
   );
 };
 
-export default MockExam2A;
+export default MockExamPhysics;

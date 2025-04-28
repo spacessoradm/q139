@@ -6,7 +6,7 @@ import { ChevronDown, Check, ArrowUp } from "lucide-react"
 import UserHeader from '../../../components/UserHeader/index';
 import UserSidebar from '../../../components/UserSideBar/index';
 
-const TestByModule2AQuestion = () => {
+const TestByModulePhysicsQuestion = () => {
     const userId = localStorage.getItem("profileId");
     const navigate = useNavigate();
     const { categoryName } = useParams(); // Get category from URL parameter
@@ -29,6 +29,11 @@ const TestByModule2AQuestion = () => {
     const [incorrectQuestions, setIncorrectQuestions] = useState([]);
     const [cycle, setCycle] = useState(0);
     const [loading, setLoading] = useState(true);
+
+    // New state for sub-questions
+    const [subQuestions, setSubQuestions] = useState([]);
+    const [subQuestionAnswers, setSubQuestionAnswers] = useState({});
+    const [subQuestionResults, setSubQuestionResults] = useState({});
 
     // Helper function to shuffle array - moved outside component for better clarity
     const shuffleArray = (array) => {
@@ -101,7 +106,7 @@ const TestByModule2AQuestion = () => {
     const handleSignOut = () => {
         localStorage.removeItem("profileId");
         setIsLoggedIn(false);
-        navigate("/homepage");
+        navigate("/");
     };
     
     const handleAccept = () => {
@@ -136,10 +141,13 @@ const TestByModule2AQuestion = () => {
         }
     }, [userId]);
     
-    const saveProgress = useCallback(async (isComplete = false) => {
+    const saveProgress = useCallback(async (
+        customCurrentIndex = currentIndex,
+        isComplete = false
+    ) => {
         const progress = {
             cycle,
-            currentIndex,
+            currentIndex: customCurrentIndex,
             selectedAnswers,
             correctAnswersCount,
             correctQuestions,
@@ -147,6 +155,8 @@ const TestByModule2AQuestion = () => {
             questionOrder: questions.map((q) => q.id),
             completed: isComplete,
         };
+
+        console.log('saving progress ::', progress)
 
         try {
             const { error } = await supabase
@@ -167,17 +177,18 @@ const TestByModule2AQuestion = () => {
     }, [cycle, currentIndex, selectedAnswers, correctAnswersCount, correctQuestions, incorrectQuestions, questions, userId, currentCategory]);
 
     // Save test record - create new or update existing
-    const saveTestRecord = async (question, userAnswer, isCorrect) => {
+    const saveTestRecord = async (questionId, isAllCorrect) => {
         try {
             const now = new Date();
+            console.log(questionId.questionId)
             
             // Check if record already exists
             const { data: existingRecord, error: checkError } = await supabase
                 .from("test_records")
                 .select("*")
                 .eq("subcategory_name", currentCategory)
-                .eq("question_id", question.id)
-                .eq("profile_id", userId)
+                .eq("question_id", questionId.questionId)
+                .eq("profile_id", Number(userId))
                 .single();
                 
             if (checkError && checkError.code !== 'PGRST116') {
@@ -190,12 +201,11 @@ const TestByModule2AQuestion = () => {
                 const { error: updateError } = await supabase
                     .from("test_records")
                     .update({
-                        result: isCorrect ? 1 : 0,
-                        selected_answer: JSON.stringify(userAnswer),
+                        result: isAllCorrect ? 1 : 0,
                         modified_at: now
                     })
                     .eq("subcategory_name", currentCategory)
-                    .eq("question_id", question.id)
+                    .eq("question_id", questionId.questionId)
                     .eq("profile_id", userId);
                     
                 if (updateError) {
@@ -207,9 +217,9 @@ const TestByModule2AQuestion = () => {
                     .from("test_records")
                     .insert({
                         subcategory_name: currentCategory,
-                        question_id: question.id,
-                        result: isCorrect ? 1 : 0,
-                        selected_answer: JSON.stringify(userAnswer),
+                        question_id: questionId.questionId,
+                        result: isAllCorrect ? 1 : 0,
+                        selected_answer: '',
                         profile_id: userId,
                         created_at: now,
                         modified_at: now
@@ -224,6 +234,29 @@ const TestByModule2AQuestion = () => {
         }
     };
 
+    async function saveTestSubRecord({ subQuestionId, questionId, userAnswer, isCorrect }) {
+        const now = new Date();
+
+        const { error } = await supabase
+            .from('test_sub_records')
+            .insert([
+                {
+                    subquestion_id: subQuestionId,
+                    parent_id: questionId,
+                    selected_answer: userAnswer,
+                    result: isCorrect,
+                    profile_id: userId,
+                    created_at: now,
+                    modified_at: now
+                }
+            ]);
+    
+        if (error) {
+            console.error('Error saving sub-question record:', error);
+            throw error;
+        }
+    }
+    
     // Data fetching and initialization
     useEffect(() => {
         const fetchQuestions = async () => {
@@ -256,7 +289,7 @@ const TestByModule2AQuestion = () => {
                 const { data: questionsData, error: questionsError } = await supabase
                     .from("questions")
                     .select("*")
-                    .eq('question_type', 'single')
+                    .eq('question_type', 'subq')
                     .eq('sub_category', currentCategory);
 
                 if (questionsError) {
@@ -278,7 +311,7 @@ const TestByModule2AQuestion = () => {
                     .from("user_quiz_progress")
                     .select("*")
                     .eq("user_id", userId)
-                    .eq("quiz_type", "single")
+                    .eq("quiz_type", "subq")
                     .eq("category", currentCategory)
                     .order("cycle", { ascending: false })
                     .limit(1)
@@ -348,6 +381,81 @@ const TestByModule2AQuestion = () => {
         };
     }, [userId, currentCategory, cycle, currentIndex, selectedAnswers, correctAnswersCount]);
 
+    // Load sub-questions for the current question
+    const loadSubQuestions = async () => {
+        if (!questions || questions.length === 0 || currentIndex >= questions.length) {
+        return;
+        }
+        
+        const currentQuestion = questions[currentIndex];
+        
+        try {
+        const { data: subQuestionsData, error: subQuestionsError } = await supabase
+            .from("subquestions")
+            .select("*")
+            .eq('parent_id', currentQuestion.id);
+                
+        if (subQuestionsError) {
+            console.error("Error fetching sub-questions:", subQuestionsError);
+            return;
+        }
+            
+        setSubQuestions(subQuestionsData || []);
+        } catch (error) {
+        console.error("Error loading sub-questions:", error);
+        }
+    };
+    
+    // Update sub-questions when current question changes
+    useEffect(() => {
+        loadSubQuestions();
+    }, [currentIndex, questions]);
+
+    // Handle selecting answers for sub-questions
+    const handleSelectSubQuestionAnswer = (subQuestionId, value) => {
+        const subQuestion = subQuestions.find(sq => sq.id === subQuestionId);
+        
+        if (subQuestion.question_type === "multiple") {
+        setSubQuestionAnswers(prev => {
+            const updated = prev[subQuestionId] ? [...prev[subQuestionId]] : [];
+            return { 
+            ...prev, 
+            [subQuestionId]: updated.includes(value) ? updated.filter(v => v !== value) : [...updated, value]
+            };
+        });
+        } else {
+        setSubQuestionAnswers({ ...subQuestionAnswers, [subQuestionId]: value });
+        }
+    };
+
+    // Updated evaluateSubQuestions function
+    const evaluateSubQuestions = () => {
+        const results = {};
+        let correctCount = 0;
+        
+        subQuestions.forEach(subQuestion => {
+            // Get user's answer for this sub-question
+            const userAnswer = subQuestionAnswers[subQuestion.id];
+            
+            // Get correct answer from subquestion data
+            const correctAnswer = subQuestion.subquestion_answer;
+            
+            // Check if answer is correct (convert both to strings for consistent comparison)
+            const isCorrect = String(userAnswer).toLowerCase() === String(correctAnswer).toLowerCase();
+            
+            results[subQuestion.id] = {
+                isCorrect,
+                userAnswer,
+                correctAnswer,
+                explanation: subQuestion.explanation
+            };
+            
+            if (isCorrect) correctCount++;
+        });
+        
+        return { results, correctCount };
+    };
+
     // Answer handling
     const handleSelectAnswer = (value) => {
         const currentQuestion = questions[currentIndex];
@@ -364,57 +472,54 @@ const TestByModule2AQuestion = () => {
     const handleSubmit = async () => {
         setSubmitted(true);
         setShowExplanation(true);
-
-        const question = questions[currentIndex];
-        const userAnswer = Array.isArray(selectedAnswers[currentIndex])
-            ? selectedAnswers[currentIndex]
-            : [selectedAnswers[currentIndex]];
-        
-        let correctAnswer;
-        try {
-            correctAnswer = typeof question.correct_answer === "string"
-                ? question.correct_answer.includes(",")
-                    ? question.correct_answer.split(",").map(a => a.trim())
-                    : [question.correct_answer]
-                : question.correct_answer;
-        } catch (error) {
-            console.error("Error parsing correct_answer:", error);
-            correctAnswer = [];
-        }
-
-        if (!Array.isArray(correctAnswer)) correctAnswer = [correctAnswer];
-
-        const isCorrect = JSON.stringify(userAnswer.sort()) === JSON.stringify(correctAnswer.sort());
-
-        // Update state
-        if (isCorrect) {
+    
+        const currentQuestion = questions[currentIndex];
+        const { results, correctCount } = evaluateSubQuestions();
+        setSubQuestionResults(results);
+    
+        const isAllCorrect = correctCount === subQuestions.length;
+    
+        if (isAllCorrect) {
             setCorrectAnswersCount(prev => prev + 1);
             setCorrectQuestions(prev => [...prev, currentIndex]);
         } else {
             setIncorrectQuestions(prev => [...prev, currentIndex]);
         }
-
+    
         try {
-            // Save or update test record
-            await saveTestRecord(question, userAnswer, isCorrect);
-            
-            // Save quiz progress
+            // Save each sub-question result
+            for (const subQuestion of subQuestions) {
+                const subResult = results[subQuestion.id];
+    
+                await saveTestSubRecord({
+                    subQuestionId: subQuestion.id,
+                    questionId: currentQuestion.id,
+                    userAnswer: subResult.userAnswer,
+                    isCorrect: subResult.isCorrect
+                });
+            }
+    
+            // Save main question result - this records if ALL subquestions were correct
+            await saveTestRecord({          
+                questionId: currentQuestion.id,
+                isAllCorrect: isAllCorrect
+            });
+    
+            // Save progress and session
             await saveProgress();
-            
-            // Update last session
             await updateLastSession();
         } catch (error) {
             console.error("Error in handle submit:", error);
         }
     };
-
+    
     const handleNext = async () => {
         setSubmitted(false);
         setShowExplanation(false);
     
         if (currentIndex < questions.length - 1) {
             setCurrentIndex(currentIndex + 1);
-            await saveProgress(); // Save progress for each step
+            await saveProgress(currentIndex + 1); // Save progress for each step
             await updateLastSession(); // Update last session timestamp
         }
     };
@@ -453,6 +558,26 @@ const TestByModule2AQuestion = () => {
             console.error("Error in final submit:", error);
         }
     };
+
+    // Check if all sub-questions have been answered
+    const allSubQuestionsAnswered = () => {
+        if (!subQuestions || subQuestions.length === 0) return false;
+        
+        return subQuestions.every(sq => 
+        subQuestionAnswers[sq.id] !== undefined && 
+        (Array.isArray(subQuestionAnswers[sq.id]) ? 
+            subQuestionAnswers[sq.id].length > 0 : 
+            subQuestionAnswers[sq.id] !== null)
+        );
+    };
+
+    const handleSubQuestionAnswer = (subQuestionId, value) => {
+        setSubQuestionAnswers(prev => ({
+          ...prev,
+          [subQuestionId]: value
+        }));
+      };
+      
 
     // Loading state
     if (loading) {
@@ -533,60 +658,108 @@ const TestByModule2AQuestion = () => {
                             questions.length > 0 && (
                                 <div>
                                     <h2>{questions[currentIndex].question_text}</h2>
-                                    {JSON.parse(questions[currentIndex].options).map((optionText, index) => {
-                                        const letter = String.fromCharCode(65 + index);
-                                        const isCorrect = (questions[currentIndex].correct_answer || "").split(",").map(a => a.trim()).includes(letter);
-                                        const isSelected = selectedAnswers[currentIndex]?.includes(letter);
-                                        const isIncorrect = isSelected && !isCorrect;
+                                    {/* Display sub-questions */}
+                                    {subQuestions.map((subQuestion, sqIndex) => {
+                                        const subQuestionResult = submitted ? subQuestionResults[subQuestion.id] : null;
 
                                         return (
                                             <div
-                                                key={index}
-                                                className={`option ${submitted ? (isCorrect ? "correct" : isIncorrect ? "wrong" : "") : ""}`}
-                                                style={{
-                                                    border: "1px solid #ccc",
-                                                    borderRadius: "8px",
-                                                    padding: "12px",
-                                                    marginBottom: "10px",
-                                                    cursor: submitted ? "default" : "pointer",
-                                                    backgroundColor: submitted
-                                                    ? isCorrect
-                                                        ? "#d4edda"
-                                                        : isIncorrect
-                                                        ? "#f8d7da"
-                                                        : "#fff"
-                                                    : "#fff",
-                                                    transition: "background-color 0.3s",
-                                                }}
-                                                onClick={() => {
-                                                    if (!submitted) handleSelectAnswer(letter);
-                                                }}
-                                                >
-                                                <label style={{ display: "flex", alignItems: "center", width: "100%", cursor: "inherit" }}>
+                                            key={subQuestion.id}
+                                            className="sub-question"
+                                            style={{
+                                                marginBottom: "20px",
+                                                padding: "15px",
+                                                borderRadius: "8px",
+                                                border: "1px solid #eee",
+                                                backgroundColor: submitted 
+                                                    ? (subQuestionResult && subQuestionResult.isCorrect 
+                                                        ? "#e8f5e9" // Light green for correct
+                                                        : "#ffebee") // Light red for incorrect
+                                                    : "#f9f9f9"
+                                            }}
+                                            >
+                                            <h3>Sub-question {sqIndex + 1}: {subQuestion.subquestion_text}</h3>
+
+                                            {/* Options rendering for True and False */}
+                                            {!submitted && (
+                                                <div className="options">
+                                                <label style={{ 
+                                                    marginRight: "20px", 
+                                                    display: "inline-block",
+                                                    padding: "8px 16px",
+                                                    border: "1px solid #ddd",
+                                                    borderRadius: "4px",
+                                                    cursor: "pointer",
+                                                    backgroundColor: subQuestionAnswers[subQuestion.id] === "true" ? "#e3f2fd" : "transparent"
+                                                }}>
                                                     <input
-                                                    type={questions[currentIndex].question_type === "multiple" ? "checkbox" : "radio"}
-                                                    name="answer"
-                                                    value={letter}
-                                                    checked={isSelected}
-                                                    disabled={submitted}
-                                                    onChange={() => handleSelectAnswer(letter)} // still needed for accessibility
-                                                    style={{ marginRight: "10px", pointerEvents: "none" }} // prevent double firing
+                                                    type="radio"
+                                                    name={`subquestion-${subQuestion.id}`}
+                                                    value="true"
+                                                    checked={subQuestionAnswers[subQuestion.id] === "true"}
+                                                    onChange={() => handleSubQuestionAnswer(subQuestion.id, "true")}
+                                                    style={{ marginRight: "8px" }}
                                                     />
-                                                    {letter}. {optionText}
+                                                    True
                                                 </label>
+
+                                                <label style={{ 
+                                                    display: "inline-block",
+                                                    padding: "8px 16px",
+                                                    border: "1px solid #ddd",
+                                                    borderRadius: "4px",
+                                                    cursor: "pointer",
+                                                    backgroundColor: subQuestionAnswers[subQuestion.id] === "false" ? "#e3f2fd" : "transparent"
+                                                }}>
+                                                    <input
+                                                    type="radio"
+                                                    name={`subquestion-${subQuestion.id}`}
+                                                    value="false"
+                                                    checked={subQuestionAnswers[subQuestion.id] === "false"}
+                                                    onChange={() => handleSubQuestionAnswer(subQuestion.id, "false")}
+                                                    style={{ marginRight: "8px" }}
+                                                    />
+                                                    False
+                                                </label>
+                                                </div>
+                                            )}
+
+                                            {/* Show Result and Explanation after Submit */}
+                                            {submitted && subQuestionResult && (
+                                                <div>
+                                                    <div style={{ 
+                                                        marginTop: "10px", 
+                                                        fontWeight: "bold", 
+                                                        color: subQuestionResult.isCorrect ? "green" : "red" 
+                                                    }}>
+                                                        {subQuestionResult.isCorrect 
+                                                            ? "✓ Correct" 
+                                                            : `✗ Incorrect. The correct answer is: ${subQuestionResult.correctAnswer}`}
+                                                    </div>
+                                                    
+                                                    {subQuestion.explanation && (
+                                                        <div className="explanation" style={{ 
+                                                            marginTop: "10px", 
+                                                            padding: "10px",
+                                                            backgroundColor: "#f5f5f5",
+                                                            borderRadius: "4px"
+                                                        }}>
+                                                            <strong>Explanation:</strong> {subQuestion.explanation}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
                                             </div>
-
-
                                         );
                                     })}
 
                                     {!submitted ? (
                                         <button 
                                             onClick={handleSubmit}
-                                            disabled={!selectedAnswers[currentIndex]}
-                                            className={!selectedAnswers[currentIndex] ? "disabled-btn" : ""}
+                                            disabled={!allSubQuestionsAnswered()}
+                                            className={!allSubQuestionsAnswered() ? "disabled-btn" : ""}
                                         >
-                                            Submit
+                                            Submit All Answers
                                         </button>
                                     ) : (
                                         <>
@@ -647,4 +820,4 @@ const TestByModule2AQuestion = () => {
     );
 };
 
-export default TestByModule2AQuestion;
+export default TestByModulePhysicsQuestion;

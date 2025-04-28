@@ -82,7 +82,7 @@ export default function HomePage() {
   const handleSignOut = () => {
     localStorage.removeItem("profileId"); // Clear token
     setIsLoggedIn(false);
-    window.location.href = "/homepage"; // Redirect to homepage (optional)
+    window.location.href = "/"; // Redirect to homepage (optional)
   };
 
   const handleAccept = () => {
@@ -168,10 +168,10 @@ export default function HomePage() {
                 <a
                   href={
                     isLoggedIn
-                      ? userRole[0]?.is_Physics === true
-                        ? "/userdashboardphysics"
-                        : userRole[0]?.is_PA === true
-                        ? "/userdashboard"
+                      ? userRole[0]?.is_PA === true
+                        ? "/user_dashboard_2A"
+                        : userRole[0]?.is_Physics === true
+                        ? "/user_dashboard_physics"
                         : "/homepage"
                       : "#"
                   }

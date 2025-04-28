@@ -4,7 +4,7 @@ import supabase from "../../../config/supabaseClient";
 import "./index.css";
 import { ChevronDown, Check, ArrowUp } from "lucide-react"
 import UserHeader from '../../../components/UserHeader/index';
-import UserSidebar from '../../../components/UserSidebar/index';
+import UserSidebar from '../../../components/UserSideBar/index';
 
 const MockExam2AQuestion = () => {
     const userId = localStorage.getItem("profileId");
@@ -159,8 +159,6 @@ const MockExam2AQuestion = () => {
             session_id: sessionId
         };
 
-
-
         try {
             const { error } = await supabase
                 .from("user_quiz_progress")
@@ -191,7 +189,6 @@ const MockExam2AQuestion = () => {
                 .eq("subcategory_name", currentCategory)
                 .eq("question_id", question.id)
                 .eq("profile_id", userId)
-                .eq("session_id", sessionId)
                 .single();
                 
             if (checkError && checkError.code !== 'PGRST116') {
@@ -211,7 +208,6 @@ const MockExam2AQuestion = () => {
                     .eq("subcategory_name", currentCategory)
                     .eq("question_id", question.id)
                     .eq("profile_id", userId)
-                    .eq("session_id", sessionId);
                     
                 if (updateError) {
                     console.error("Error updating test record:", updateError);
@@ -226,7 +222,6 @@ const MockExam2AQuestion = () => {
                         result: isCorrect ? 1 : 0,
                         selected_answer: JSON.stringify(userAnswer),
                         profile_id: userId,
-                        session_id: sessionId,
                         created_at: now,
                         modified_at: now
                     });
@@ -261,6 +256,8 @@ const MockExam2AQuestion = () => {
                     setUserRole(userRoleData);
                 }
 
+                console.log(sessionId)
+
                 // Fetch exam session data using sessionId
                 if (!sessionId) {
                     console.error("No session ID specified");
@@ -290,14 +287,18 @@ const MockExam2AQuestion = () => {
                 //setCurrentCategory(sessionData.category || categoryName);
 
                 // Calculate remaining time
-                const startTime = new Date(sessionData.start_time);
-                const endTime = new Date(startTime.getTime() + (180 * 60 * 1000)); // 180 minutes from start
-                const now = new Date();
-                const remainingSecs = Math.max(0, Math.floor((endTime - now) / 1000));
-                setRemainingTime(remainingSecs);
-                
-                if (remainingSecs <= 0) {
-                    setExamExpired(true);
+                if (sessionData.timer_on != false){
+                    const startTime = new Date(sessionData.start_time);
+                    const endTime = new Date(startTime.getTime() + (180 * 60 * 1000)); // 180 minutes from start
+                    const now = new Date();
+                    const remainingSecs = Math.max(0, Math.floor((endTime - now) / 1000));
+                    setRemainingTime(remainingSecs);
+                    
+                    if (remainingSecs <= 0) {
+                        setExamExpired(true);
+                    }
+                } else {
+                    console.log('here')
                 }
 
                 // Extract question IDs from session data
@@ -352,6 +353,8 @@ const MockExam2AQuestion = () => {
                     .eq("quiz_type", "exam")
                     .eq("session_id", sessionId)
                     .single();
+
+                console.log(progressData);
 
                 if (progressData) {
                     // Restore progress from database
@@ -533,16 +536,22 @@ const MockExam2AQuestion = () => {
                         <div className="score-section" style={{ textAlign: "center", marginBottom: "16px" }}>
                             <h4>{currentCategory}</h4>
                             {/* Timer display */}
-                            <div className="exam-timer" style={{ 
-                                padding: "10px", 
-                                borderRadius: "8px", 
-                                fontWeight: "bold",
-                                fontSize: "1.2rem",
-                                color: remainingTime < 300 ? "red" : "black",
-                                marginBottom: "16px"
-                            }}>
-                                Time Remaining: {formatTimeRemaining(remainingTime)}
-                            </div>
+                            {examSession.timer_on != false && (
+                                <div
+                                    className="exam-timer"
+                                    style={{ 
+                                    padding: "10px", 
+                                    borderRadius: "8px", 
+                                    fontWeight: "bold",
+                                    fontSize: "1.2rem",
+                                    color: remainingTime < 300 ? "red" : "black",
+                                    marginBottom: "16px"
+                                    }}
+                                >
+                                    Time Remaining: {formatTimeRemaining(remainingTime)}
+                                </div>
+                            )}
+
                         </div>
 
                         <ul className="progress-bar">
@@ -584,17 +593,41 @@ const MockExam2AQuestion = () => {
                                         const isIncorrect = isSelected && !isCorrect;
 
                                         return (
-                                            <div key={index} className={`option ${submitted ? (isCorrect ? "correct" : isIncorrect ? "wrong" : "") : ""}`}>
+                                            <div
+                                                key={index}
+                                                className={`option ${submitted ? (isCorrect ? "correct" : isIncorrect ? "wrong" : "") : ""}`}
+                                                onClick={() => {
+                                                    if (!submitted && !examExpired) handleSelectAnswer(letter);
+                                                }}
+                                                style={{
+                                                    border: "1px solid #ccc",
+                                                    borderRadius: "8px",
+                                                    padding: "12px",
+                                                    marginBottom: "10px",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    cursor: submitted || examExpired ? "default" : "pointer",
+                                                    backgroundColor: submitted
+                                                    ? isCorrect
+                                                        ? "#d4edda"
+                                                        : isIncorrect
+                                                        ? "#f8d7da"
+                                                        : "#fff"
+                                                    : "#fff",
+                                                }}
+                                                >
                                                 <input
                                                     type={questions[currentIndex].question_type === "multiple" ? "checkbox" : "radio"}
                                                     name="answer"
                                                     value={letter}
                                                     checked={isSelected}
-                                                    disabled={submitted || examExpired} 
-                                                    onChange={() => handleSelectAnswer(letter)}
+                                                    disabled={submitted || examExpired}
+                                                    onChange={() => handleSelectAnswer(letter)} // still required for keyboard users
+                                                    style={{ marginRight: "10px", pointerEvents: "none" }} // avoid double click conflict
                                                 />
                                                 {letter}. {optionText}
                                             </div>
+
                                         );
                                     })}
 

@@ -14,7 +14,7 @@ import {
   LogOut,   
 } from 'lucide-react';
 import UserHeader from '../../../components/UserHeader/index';
-import UserSidebar from '../../../components/UserSidebar/index';
+import UserSidebar from '../../../components/UserSideBar/index';
 import './FRCRDashboard.css';
 
 const FRCRDashboard = () => {
@@ -137,6 +137,19 @@ const FRCRDashboard = () => {
   const navigate = useNavigate();
   const userId = localStorage.getItem("profileId");
   const [profile, setProfile] = useState(null);
+  const [progressData, setProgressData] = useState({});
+  const [overallProgress, setOverallProgress] = useState(0);
+  const [overallScore, setOverallScore] = useState(0);
+
+  const imageUrls = {
+    "Matter and Radiation": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/7.png",
+    "Radiation Hazards and Protection": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/8.png",
+    "X-ray and Fluoroscopy": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/9.png", 
+    "Computed Tomography": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/10.png",
+    "Nuclear Imaging": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/11.png",
+    "MRI": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/12.png",
+    "Ultrasound": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/13.png",
+  };
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -154,6 +167,74 @@ const FRCRDashboard = () => {
     };
 
     fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    const fetchProgressData = async () => {
+  
+      // Define subcategory groups
+      const subcategoryGroups = {
+        "Matter and Radiation": ["Matter and Radiation"],
+        "Radiation Hazards and Protection": ["Radiation Hazards and Protection"],
+        "X-ray and Fluoroscopy": ["X-ray and Fluoroscopy"],
+        "Computed Tomography": ["Computed Tomography"],
+        "Nuclear Imaging": ["Nuclear Imaging"],
+        "MRI": ["MRI"],
+        "Ultrasound": ["Ultrasound"],
+      };
+  
+      let result = {};
+      let totalQuestionsAll = 0;
+      let totalAnsweredAll = 0;
+
+      let totalAttempted = 0;
+      let totalCorrect = 0;
+  
+      for (const [label, subcategories] of Object.entries(subcategoryGroups)) {
+        // Count total questions
+        const { count: totalQuestions } = await supabase
+          .from('questions')
+          .select('*', { count: 'exact', head: true })
+          .in('sub_category', subcategories);
+  
+        // Count answered questions
+        const { data: answeredData, count: answeredQuestions } = await supabase
+          .from('test_records')
+          .select('result', { count: 'exact' })
+          .in('subcategory_name', subcategories)
+          .eq('profile_id', userId);
+ 
+        const progress = totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
+        result[label] = Math.round(progress);
+
+        totalQuestionsAll += totalQuestions || 0;
+        totalAnsweredAll += answeredQuestions || 0;
+
+        totalAttempted += answeredQuestions || 0;
+        if (answeredData) {
+          const correct = answeredData.filter(x => x.result === true).length;
+          totalCorrect += correct;
+        }
+      }
+  
+      setProgressData(result);
+
+      if (totalQuestionsAll > 0) {
+        const overall = (totalAnsweredAll / totalQuestionsAll) * 100;
+        setOverallProgress(Math.round(overall));
+      } else {
+        setOverallProgress(0);
+      }
+
+      if (totalAttempted > 0) {
+        const score = (totalCorrect / totalAttempted) * 100;
+        setOverallScore(Math.round(score));
+      } else {
+        setOverallScore(0);
+      }
+    };
+  
+    fetchProgressData();
   }, []);
 
   const CircularProgress = ({ percent, label }) => {
@@ -262,14 +343,18 @@ const FRCRDashboard = () => {
                     <div className="icon-wrapper">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-big-icon lucide-library-big"><rect width="8" height="18" x="3" y="3" rx="1"/><path d="M7 3v18"/><path d="M20.4 18.9c.2.5-.1 1.1-.6 1.3l-1.9.7c-.5.2-1.1-.1-1.3-.6L11.1 5.1c-.2-.5.1-1.1.6-1.3l1.9-.7c.5-.2 1.1.1 1.3.6Z"/></svg>
                     </div>
-                    <button>Test by Modules</button>
+                    <button
+                      onClick={() => navigate('/test_module_physics')}
+                    >Test by Modules</button>
                 </div>
 
                 <div className="button-row">
                     <div className="icon-wrapper">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-notebook-pen-icon lucide-notebook-pen"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"/><path d="M2 6h4"/><path d="M2 10h4"/><path d="M2 14h4"/><path d="M2 18h4"/><path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>
                     </div>
-                    <button>Mock Exam</button>
+                    <button
+                      onClick={() => navigate('/mock_exam_Physics')}
+                    >Mock Exam</button>
                 </div>
 
                 <div className="button-row">
@@ -321,48 +406,14 @@ const FRCRDashboard = () => {
         <div className="dashboard-chart-grid" style={{marginLeft: '50px', marginRight: '50px'}}>
             <div className="notes-card">
                 <h2>Overview</h2>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/7.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '10%'}}></div>
+                {Object.entries(progressData).map(([label, percentage], idx) => (
+                  <div key={idx} className="overview-row">
+                    <img src={imageUrls[label]} style={{ width: '110px', height: '65px' }} />
+                    <div className="progress">
+                      <div className="bar" style={{ width: `${percentage}%` }}></div>
                     </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/8.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '40%'}}></div>
-                    </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/9.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '20%'}}></div>
-                    </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/10.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '60%'}}></div>
-                    </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/11.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '60%'}}></div>
-                    </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/12.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '80%'}}></div>
-                    </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/13.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '80%'}}></div>
-                    </div>
-                </div>
+                  </div>
+                ))}
             </div>
             <div className="fact-card grid-span-2">
                 {/* Notes Header */}

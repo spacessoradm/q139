@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from "../../../config/supabaseClient";
-import Sidebar from '../../../components/UserSidebar/index';
+import Sidebar from '../../../components/UserSideBar/index';
 import UserHeader from '../../../components/UserHeader/index';
 
 import './FRCRDashboard.css';
@@ -126,6 +126,23 @@ const FRCRDashboard = () => {
   const userId = localStorage.getItem("profileId");
   //const module = localStorage.getItem("module");
   const [profile, setProfile] = useState(null);
+  const [notes, setNotes] = useState(['Demo Note']);
+  const [currentNote, setCurrentNote] = useState('');
+  const [isHovering, setIsHovering] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const [progressData, setProgressData] = useState({});
+  const [overallProgress, setOverallProgress] = useState(0);
+  const [overallScore, setOverallScore] = useState(0);
+
+  const imageUrls = {
+    "Cardiothoracic and Vascular": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/1.png",
+    "Musculoskeletal and Trauma": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/2_1.png",
+    "Gastrointestinal": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/3.png", 
+    "Genitourinary, Adrenals, Obstetrics & Gynaecology and Breast": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/4.png",
+    "Central Nervous, Head & Neck": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/6.png",
+    "Paediatric": "https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/5.png",
+  };
+  
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -143,6 +160,73 @@ const FRCRDashboard = () => {
     };
 
     fetchProfile();
+  }, []);
+
+  useEffect(() => {
+    const fetchProgressData = async () => {
+  
+      // Define subcategory groups
+      const subcategoryGroups = {
+        "Cardiothoracic and Vascular": ["Cardiothoracic and Vascular"],
+        "Musculoskeletal and Trauma": ["Musculoskeletal and Trauma"],
+        "Gastrointestinal": ["Gastrointestinal"],
+        "Genitourinary, Adrenals, Obstetrics & Gynaecology and Breast": ["Genitourinary, Adrenals, Obstetrics & Gynaecology and Breast"],
+        "Central Nervous, Head & Neck": ["Central Nervous, Head & Neck"],
+        "Paediatric": ["Paediatric"],
+      };
+  
+      let result = {};
+      let totalQuestionsAll = 0;
+      let totalAnsweredAll = 0;
+
+      let totalAttempted = 0;
+      let totalCorrect = 0;
+  
+      for (const [label, subcategories] of Object.entries(subcategoryGroups)) {
+        // Count total questions
+        const { count: totalQuestions } = await supabase
+          .from('questions')
+          .select('*', { count: 'exact', head: true })
+          .in('sub_category', subcategories);
+  
+        // Count answered questions
+        const { data: answeredData, count: answeredQuestions } = await supabase
+          .from('test_records')
+          .select('result', { count: 'exact' })
+          .in('subcategory_name', subcategories)
+          .eq('profile_id', userId);
+ 
+        const progress = totalQuestions > 0 ? (answeredQuestions / totalQuestions) * 100 : 0;
+        result[label] = Math.round(progress);
+
+        totalQuestionsAll += totalQuestions || 0;
+        totalAnsweredAll += answeredQuestions || 0;
+
+        totalAttempted += answeredQuestions || 0;
+        if (answeredData) {
+          const correct = answeredData.filter(x => x.result === true).length;
+          totalCorrect += correct;
+        }
+      }
+  
+      setProgressData(result);
+
+      if (totalQuestionsAll > 0) {
+        const overall = (totalAnsweredAll / totalQuestionsAll) * 100;
+        setOverallProgress(Math.round(overall));
+      } else {
+        setOverallProgress(0);
+      }
+
+      if (totalAttempted > 0) {
+        const score = (totalCorrect / totalAttempted) * 100;
+        setOverallScore(Math.round(score));
+      } else {
+        setOverallScore(0);
+      }
+    };
+  
+    fetchProgressData();
   }, []);
 
   const CircularProgress = ({ percent, label }) => {
@@ -191,11 +275,6 @@ const FRCRDashboard = () => {
     );
   };
 
-  const [notes, setNotes] = useState(['Demo Note']);
-  const [currentNote, setCurrentNote] = useState('');
-  const [isHovering, setIsHovering] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
-
   const handleInputChange = (e) => {
     setCurrentNote(e.target.value);
   };
@@ -217,6 +296,7 @@ const FRCRDashboard = () => {
     const { data, error } = await supabase
       .from('last_session')
       .select('id, open_session, session_id')
+      .eq('profile_id', userId)
       .order('modified_at', { ascending: false })
       .limit(1)
       .single(); // returns a single object instead of array
@@ -226,12 +306,14 @@ const FRCRDashboard = () => {
       return;
     }
 
+    console.log(data)
+
     if (data) {
     
       const { id, open_session, session_id } = data;
 
       if (open_session === '2A') {
-        navigate('/mock_exam_2A_questions', {
+        navigate('/mock_exam_2A_question', {
           state: { sessionId: session_id }
         });
       } else {
@@ -266,8 +348,8 @@ const FRCRDashboard = () => {
           </div>
 
           {/* Score Cards */}
-          <CircularProgress percent={41} label="Overall Score" />
-          <Gauge percent={50} label="Overall Progress" description="Attempted Questions" />
+          <CircularProgress percent={overallScore} label="Overall Score" />
+          <Gauge percent={overallProgress} label="Overall Progress" description="Attempted Questions" />
 
         </div>
 
@@ -278,7 +360,9 @@ const FRCRDashboard = () => {
                     <div className="icon-wrapper">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library-big-icon lucide-library-big"><rect width="8" height="18" x="3" y="3" rx="1"/><path d="M7 3v18"/><path d="M20.4 18.9c.2.5-.1 1.1-.6 1.3l-1.9.7c-.5.2-1.1-.1-1.3-.6L11.1 5.1c-.2-.5.1-1.1.6-1.3l1.9-.7c.5-.2 1.1.1 1.3.6Z"/></svg>
                     </div>
-                    <button>Test by Modules</button>
+                    <button
+                      onClick={() => navigate('/test_module_2A')}
+                    >Test by Modules</button>
                 </div>
 
                 <div className="button-row">
@@ -339,42 +423,15 @@ const FRCRDashboard = () => {
         <div className="dashboard-chart-grid" style={{marginLeft: '50px', marginRight: '50px'}}>
             <div className="notes-card">
                 <h2>Overview</h2>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/1.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '10%'}}></div>
+                {Object.entries(progressData).map(([label, percentage], idx) => (
+                  <div key={idx} className="overview-row">
+                    <img src={imageUrls[label]} style={{ width: '110px', height: '65px' }} />
+                    <div className="progress">
+                      <div className="bar" style={{ width: `${percentage}%` }}></div>
                     </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/2_1.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '40%'}}></div>
-                    </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/3.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '20%'}}></div>
-                    </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/4.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '60%'}}></div>
-                    </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/6.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '60%'}}></div>
-                    </div>
-                </div>
-                <div class="overview-row">
-                    <img src="https://vuhurnvoeziyugrmjiqs.supabase.co/storage/v1/object/public/general/5.png" style={{width: '80px', height: '50px'}} />
-                    <div class="progress">
-                        <div class="bar" style={{width: '80%'}}></div>
-                    </div>
-                </div>
+                  </div>
+                ))}
+
             </div>
             <div className="fact-card grid-span-2">
                 {/* Notes Header */}
