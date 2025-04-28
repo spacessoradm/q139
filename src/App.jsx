@@ -16,9 +16,12 @@ import TestByModuleA from './containers/Authentication/HomePage/TestByModuleA';
 import TestByModulePhysics from './containers/Authentication/HomePage/TestByModulePhysics';
 
 import TestByModule2AQuestion from './containers/Authentication/HomePage/TestByModule2AQuestion.jsx';
+import TestByModulePhysicsQuestion from './containers/Authentication/HomePage/TestByModulePhysicsQuestion.jsx';
 
 import MockExam2A from './containers/Authentication/HomePage/MockExam2A.jsx';
 import MockExam2AQuestion from './containers/Authentication/HomePage/MockExam2AQuestion.jsx';
+
+import MockExamPhysics from './containers/Authentication/HomePage/MockExamPhysics.jsx';
 
 import Module2A from './containers/Authentication/HomePage/Module2A';
 //import supabase from './config/supabaseClient';
@@ -136,6 +139,7 @@ const App = () => {
             <main className={uR === "admin" ? "admin-main-content" : ""}>
                 <Routes>
                     {/* Default Route */}
+                    <Route path="/" element={<Navigate to="/homepage" />} />
 
                     {/* Authentication Routes */}
                     <Route path="/homepage" element={<HomePage />} />
@@ -156,9 +160,12 @@ const App = () => {
                     <Route path="/test_module_physics" element={<TestByModulePhysics />} />
 
                     <Route path="/test_module_2A_questions/:categoryName" element={<TestByModule2AQuestion />} />
+                    <Route path="/test_module_Physics_questions/:categoryName" element={<TestByModulePhysicsQuestion />} />
 
                     <Route path='/mock_exam_2A' element={<MockExam2A />} />
                     <Route path='/mock_exam_2A_question' element={<MockExam2AQuestion />} />
+
+                    <Route path='/mock_exam_Physics' element={<MockExamPhysics />} />
 
                     <Route path="/module_2A" element={<Module2A />} />
 
