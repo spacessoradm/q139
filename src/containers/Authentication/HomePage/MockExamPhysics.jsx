@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from "../../../config/supabaseClient";
 import UserHeader from '../../../components/UserHeader';
-import UserSidebar from '../../../components/UserSideBar';
+import UserSidebar from '../../../components/UserSidebar/index';
 
 const MockExamPhysics = () => {
   const navigate = useNavigate();
