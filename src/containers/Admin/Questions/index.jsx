@@ -226,7 +226,7 @@ const Questions = () => {
   return (
     <div className="container" style={{ fontFamily: 'Poppins' }}>
       {/* Sidebar */}
-      <div className="sidebar">
+      <div className="sidebar-question-management">
         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
           <h4>Question Categories</h4>
           <FaRegFileAlt 
