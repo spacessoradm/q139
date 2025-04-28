@@ -14,7 +14,7 @@ import {
   LogOut,   
 } from 'lucide-react';
 import UserHeader from '../../../components/UserHeader/index';
-import UserSidebar from '../../../components/UserSideBar';
+import UserSidebar from '../../../components/UserSidebar/index';
 import './FRCRDashboard.css';
 
 const FRCRDashboard = () => {
