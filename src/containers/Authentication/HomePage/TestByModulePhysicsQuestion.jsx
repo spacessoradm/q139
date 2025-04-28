@@ -4,7 +4,7 @@ import supabase from "../../../config/supabaseClient";
 import "./index.css";
 import { ChevronDown, Check, ArrowUp } from "lucide-react"
 import UserHeader from '../../../components/UserHeader/index';
-import UserSidebar from '../../../components/UserSideBar';
+import UserSidebar from '../../../components/UserSidebar/index';
 
 const TestByModulePhysicsQuestion = () => {
     const userId = localStorage.getItem("profileId");
