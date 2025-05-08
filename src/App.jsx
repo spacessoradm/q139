@@ -22,6 +22,7 @@ import MockExam2A from './containers/Authentication/HomePage/MockExam2A.jsx';
 import MockExam2AQuestion from './containers/Authentication/HomePage/MockExam2AQuestion.jsx';
 
 import MockExamPhysics from './containers/Authentication/HomePage/MockExamPhysics.jsx';
+import MockExamPhysicsQuestion from './containers/Authentication/HomePage/MockExamPhysicsQuestion.jsx';
 
 import Module2A from './containers/Authentication/HomePage/Module2A';
 //import supabase from './config/supabaseClient';
@@ -166,6 +167,7 @@ const App = () => {
                     <Route path='/mock_exam_2A_question' element={<MockExam2AQuestion />} />
 
                     <Route path='/mock_exam_Physics' element={<MockExamPhysics />} />
+                    <Route path='/mock_exam_physics_question' element={<MockExamPhysicsQuestion />} />
 
                     <Route path="/module_2A" element={<Module2A />} />
 
