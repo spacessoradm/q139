@@ -152,7 +152,7 @@ const MockExamPhysics = () => {
     }
   
     // Navigate with session ID
-    navigate('/mock_exam_2A_question', {
+    navigate('/mock_exam_physics_question', {
       state: {
         sessionId: sessionData.id
       }
